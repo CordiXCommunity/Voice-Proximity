@@ -16,13 +16,13 @@ function CFG.Warn(side, message)
     Console.Warn("[" .. side .. "] " .. tostring(message))
 end
 
-local function validColor(color)
-    if type(color) ~= "table" or #color ~= 3 then return false end
-    for i = 1, 3 do
-        if type(color[i]) ~= "number" or color[i] < 0 or color[i] > 1 then return false end
-    end
-    return true
-end
+local POSITIONS = {
+    ["bottom-right"] = true, ["bottom-left"] = true,
+    ["top-right"] = true, ["top-left"] = true,
+}
+local HUD_COLORS = {
+    "background", "border", "textColor", "micIdle", "micTalking", "neon", "barsOn", "barsOff",
+}
 
 -- Checks the config. Returns the list of problems (empty = all good).
 function CFG.Validate()
@@ -58,12 +58,36 @@ function CFG.Validate()
         table.insert(problems, T("p_circle"))
     end
 
+    local n = CFG.notification
+    if type(n) ~= "table" or type(n.duration) ~= "number" or n.duration <= 0 then
+        table.insert(problems, T("p_notif"))
+    end
+
+    local h = CFG.hud
+    if type(h) ~= "table" then
+        table.insert(problems, T("p_hud_pos"))
+    else
+        if not POSITIONS[h.position] then
+            table.insert(problems, T("p_hud_pos"))
+        end
+        for _, key in ipairs(HUD_COLORS) do
+            if type(h[key]) ~= "string" or h[key] == "" then
+                table.insert(problems, T("p_hud_color", key))
+            end
+        end
+        for _, key in ipairs({ "marginX", "marginY", "neonSize" }) do
+            if type(h[key]) ~= "number" or h[key] < 0 then
+                table.insert(problems, T("p_hud_num", key))
+            end
+        end
+    end
+
     local previous = 0
     for i, mode in ipairs(CFG.modes) do
         if type(mode.id) ~= "string" or mode.id == "" then
             table.insert(problems, T("p_mode_id", i))
         end
-        if mode.color ~= nil and not validColor(mode.color) then
+        if mode.color ~= nil and not CFG.ParseColor(mode.color) then
             table.insert(problems, T("p_color", i))
         end
         if type(mode.meters) ~= "number" or mode.meters <= 0 then

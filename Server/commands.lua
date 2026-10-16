@@ -26,7 +26,7 @@ Console.RegisterCommand("voice_debug", function()
     out(T("report_cfg", tostring(CFG.key), tostring(CFG.defaultMode),
         tostring(CFG.unitsPerMeter), tostring(CFG.language)))
     for i, mode in ipairs(CFG.modes) do
-        out(T("report_mode", i, mode.id, mode.meters, mode.meters * CFG.unitsPerMeter))
+        out(T("report_mode", i, mode.id, mode.meters, mode.meters * CFG.unitsPerMeter, CFG.ToHex(mode.color)))
     end
 
     local problems = CFG.Validate()

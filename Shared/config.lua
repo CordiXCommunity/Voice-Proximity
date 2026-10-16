@@ -1,5 +1,7 @@
 -- Voice Proximity | Creator: Max Cordiau - Cordix
 -- Shared/config.lua : all the package settings are here.
+-- Colors: use "#RRGGBB" (ex: "#2ee6c8"). For the HUD you can also use CSS colors
+-- like "rgba(10, 12, 14, 0.62)".
 
 VoiceProximity = {
     -- Language of ALL visible texts (console + in game): "fr" or "en"
@@ -16,12 +18,13 @@ VoiceProximity = {
     defaultMode = 2,
 
     -- Ranges in METERS. Edit freely. "id" is used for the translated name
-    -- (see "mode.<id>" in Shared/lang.lua). "color" = {r, g, b} between 0 and 1,
-    -- used for the ground circle.
+    -- (see "mode.<id>" in Shared/lang.lua).
+    -- "color" is the color of this mode: ground circle, notification dot and,
+    -- if hud.followModeColor = true, the HUD itself.
     modes = {
-        { id = "whisper", meters = 3,  color = { 0.45, 0.80, 1.00 } },
-        { id = "normal",  meters = 10, color = { 0.18, 0.90, 0.78 } },
-        { id = "shout",   meters = 25, color = { 1.00, 0.60, 0.20 } },
+        { id = "whisper", meters = 3,  color = "#73ccff" },
+        { id = "normal",  meters = 10, color = "#2ee6c8" },
+        { id = "shout",   meters = 25, color = "#ff9933" },
     },
 
     -- Meters -> Nanos World units multiplier (1 unit = 1 cm).
@@ -41,13 +44,34 @@ VoiceProximity = {
         segments = 64,       -- smoothness of the circle
     },
 
-    -- HUD appearance (pixels / CSS colors)
+    -- Small notification shown at every mode change ("Voice: Whisper (3 m)")
+    notification = {
+        enabled = true,
+        duration = 2,        -- seconds
+        showRange = true,    -- true = adds the range in meters
+    },
+
+    -- HUD appearance
     hud = {
-        right = 22,
-        bottom = 22,
-        accent = "#2ee6c8",
-        idle = "#1f6f66",
-        -- true = shows the mode name for ~1.5 s when you switch (no permanent text)
-        showLabel = true,
+        -- "bottom-right", "bottom-left", "top-right" or "top-left"
+        position = "bottom-right",
+        marginX = 22,                          -- pixels from the left/right edge
+        marginY = 22,                          -- pixels from the top/bottom edge
+
+        background = "rgba(10, 12, 14, 0.62)", -- HUD background
+        border = "rgba(255, 255, 255, 0.05)",  -- HUD border
+        textColor = "#e8fffb",                 -- notification text
+
+        micIdle = "#1f6f66",                   -- microphone when you are silent
+        micTalking = "#2ee6c8",                -- microphone when you talk
+        neon = "#2ee6c8",                      -- color of the neon glow when you talk
+        neonSize = 7,                          -- glow size in pixels (0 = no glow)
+        neonPulse = true,                      -- true = the glow gently pulses while you talk
+
+        barsOn = "#2ee6c8",                    -- active mode bars
+        barsOff = "rgba(255, 255, 255, 0.16)", -- inactive bars
+
+        -- true = micTalking, neon, barsOn and the notification dot use the color of the current mode
+        followModeColor = false,
     },
 }

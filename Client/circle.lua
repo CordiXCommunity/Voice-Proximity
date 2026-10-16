@@ -65,11 +65,13 @@ function CFG.ShowCircle(index)
         return
     end
 
-    local rgb = mode.color or { 0.18, 0.90, 0.78 }
+    local r, g, b = CFG.ParseColor(mode.color)
+    if not r then r, g, b = 0.18, 0.90, 0.78 end
+
     local now = os.clock()
     active = {
         radius = mode.meters * CFG.unitsPerMeter,
-        color = Color(rgb[1], rgb[2], rgb[3]),
+        color = Color(r, g, b),
         started = now,
         deadline = now + CFG.circle.duration,
     }

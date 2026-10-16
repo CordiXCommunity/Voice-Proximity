@@ -1,5 +1,17 @@
 /* Voice Proximity | Creator: Max Cordiau - Cordix */
-:root { --accent: #2ee6c8; --idle: #1f6f66; }
+/* These variables are overwritten at runtime from Shared/config.lua (hud = { ... }) */
+:root {
+  --bg: rgba(10, 12, 14, 0.62);
+  --border: rgba(255, 255, 255, 0.05);
+  --text: #e8fffb;
+  --mic-idle: #1f6f66;
+  --mic-talk: #2ee6c8;
+  --neon: #2ee6c8;
+  --neon-size: 7px;
+  --bar-on: #2ee6c8;
+  --bar-off: rgba(255, 255, 255, 0.16);
+  --dot: #2ee6c8;
+}
 
 html, body { margin: 0; background: transparent; overflow: hidden; }
 
@@ -7,32 +19,69 @@ html, body { margin: 0; background: transparent; overflow: hidden; }
   position: fixed; right: 22px; bottom: 22px;
   display: flex; align-items: center; gap: 8px;
   padding: 6px 10px;
-  background: rgba(10, 12, 14, 0.62);
+  background: var(--bg);
   border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
   font-family: sans-serif;
+  transition: box-shadow .15s;
 }
 
-#mic { width: 16px; height: 16px; fill: var(--idle); transition: fill .12s, filter .12s; }
-#voice.talking #mic { fill: var(--accent); filter: drop-shadow(0 0 4px var(--accent)); }
+/* Microphone: dark when silent, neon when talking */
+#mic {
+  width: 16px; height: 16px;
+  fill: var(--mic-idle);
+  transition: fill .12s, filter .12s;
+}
+#voice.talking #mic {
+  fill: var(--mic-talk);
+  filter:
+    drop-shadow(0 0 1px var(--neon))
+    drop-shadow(0 0 calc(var(--neon-size) * 0.5) var(--neon))
+    drop-shadow(0 0 var(--neon-size) var(--neon));
+}
+#voice.talking.neon-pulse #mic { animation: neonPulse 1.1s ease-in-out infinite alternate; }
+#voice.talking { box-shadow: 0 0 calc(var(--neon-size) * 1.2) -4px var(--neon); }
 
+@keyframes neonPulse {
+  from { filter:
+    drop-shadow(0 0 1px var(--neon))
+    drop-shadow(0 0 calc(var(--neon-size) * 0.4) var(--neon))
+    drop-shadow(0 0 calc(var(--neon-size) * 0.8) var(--neon)); }
+  to { filter:
+    drop-shadow(0 0 2px var(--neon))
+    drop-shadow(0 0 calc(var(--neon-size) * 0.7) var(--neon))
+    drop-shadow(0 0 calc(var(--neon-size) * 1.5) var(--neon)); }
+}
+
+/* Mode bars */
 #bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
-.bar { width: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.16); transition: background .12s; }
+.bar { width: 4px; border-radius: 2px; background: var(--bar-off); transition: background .12s; }
 .bar:nth-child(1) { height: 6px; }
 .bar:nth-child(2) { height: 10px; }
 .bar:nth-child(3) { height: 14px; }
-.bar.on { background: var(--accent); }
+.bar.on { background: var(--bar-on); }
 
 #bars.pulse { animation: pulse .5s ease-out; }
 @keyframes pulse { 0% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
-#label {
-  position: absolute; right: 0; bottom: 100%; margin-bottom: 4px;
-  padding: 2px 8px;
-  font-size: 11px; letter-spacing: .4px; color: var(--accent);
-  background: rgba(10, 12, 14, 0.62);
-  border-radius: 6px;
-  opacity: 0; transition: opacity .25s;
+/* Small notification shown at every mode change */
+#notif {
+  position: absolute; bottom: 100%; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px;
+  font-size: 11px; letter-spacing: .3px; color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
   white-space: nowrap;
+  opacity: 0; transform: translateY(4px);
+  transition: opacity .2s, transform .2s;
 }
-#label.show { opacity: 1; }
+#notif.show { opacity: 1; transform: translateY(0); }
+#notif-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 6px var(--dot); }
+
+/* HUD placed at the top: the notification goes below it */
+#voice.top #notif { bottom: auto; top: 100%; margin-bottom: 0; margin-top: 6px; transform: translateY(-4px); }
+#voice.top #notif.show { transform: translateY(0); }
+#voice.right #notif { right: 0; }
+#voice.left #notif { left: 0; }
