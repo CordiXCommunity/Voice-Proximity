@@ -73,5 +73,5 @@ Package.Subscribe("Load", function()
         CFG.Apply(player, player:GetValue("voice_mode") or CFG.defaultMode)
     end
 
-    Console.Log("[voice-proximity] " .. T("ready", #CFG.modes, tostring(CFG.debug), tostring(CFG.language)))
+    Console.Log(T("ready", #CFG.modes, tostring(CFG.debug), tostring(CFG.language)))
 end)

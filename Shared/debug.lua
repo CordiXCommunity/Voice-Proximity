@@ -1,18 +1,27 @@
 -- Voice Proximity | Creator: Max Cordiau - Cordix
 -- Shared/debug.lua : logging and config validation.
+-- Note: Nanos World already prefixes every message with the package name.
 
 local CFG = VoiceProximity
 
 -- Log shown only when debug = true. "side" is "SERVER" or "CLIENT".
 function CFG.Log(side, message)
     if CFG.debug then
-        Console.Log("[voice-proximity][DEBUG][" .. side .. "] " .. tostring(message))
+        Console.Log("[DEBUG][" .. side .. "] " .. tostring(message))
     end
 end
 
 -- Warning always shown (real problem).
 function CFG.Warn(side, message)
-    Console.Warn("[voice-proximity][" .. side .. "] " .. tostring(message))
+    Console.Warn("[" .. side .. "] " .. tostring(message))
+end
+
+local function validColor(color)
+    if type(color) ~= "table" or #color ~= 3 then return false end
+    for i = 1, 3 do
+        if type(color[i]) ~= "number" or color[i] < 0 or color[i] > 1 then return false end
+    end
+    return true
 end
 
 -- Checks the config. Returns the list of problems (empty = all good).
@@ -40,10 +49,22 @@ function CFG.Validate()
         table.insert(problems, T("p_units"))
     end
 
+    local c = CFG.circle
+    if type(c) ~= "table" or type(c.duration) ~= "number" or c.duration <= 0
+        or type(c.expandTime) ~= "number" or c.expandTime < 0
+        or type(c.releaseDelay) ~= "number" or c.releaseDelay < 0
+        or type(c.maxHold) ~= "number" or c.maxHold <= 0
+        or type(c.segments) ~= "number" or c.segments < 8 then
+        table.insert(problems, T("p_circle"))
+    end
+
     local previous = 0
     for i, mode in ipairs(CFG.modes) do
         if type(mode.id) ~= "string" or mode.id == "" then
             table.insert(problems, T("p_mode_id", i))
+        end
+        if mode.color ~= nil and not validColor(mode.color) then
+            table.insert(problems, T("p_color", i))
         end
         if type(mode.meters) ~= "number" or mode.meters <= 0 then
             table.insert(problems, T("p_meters_num", i))

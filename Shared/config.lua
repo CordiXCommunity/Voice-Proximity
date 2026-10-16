@@ -16,16 +16,30 @@ VoiceProximity = {
     defaultMode = 2,
 
     -- Ranges in METERS. Edit freely. "id" is used for the translated name
-    -- (see "mode.<id>" in Shared/lang.lua).
+    -- (see "mode.<id>" in Shared/lang.lua). "color" = {r, g, b} between 0 and 1,
+    -- used for the ground circle.
     modes = {
-        { id = "whisper", meters = 3 },
-        { id = "normal",  meters = 10 },
-        { id = "shout",   meters = 25 },
+        { id = "whisper", meters = 3,  color = { 0.45, 0.80, 1.00 } },
+        { id = "normal",  meters = 10, color = { 0.18, 0.90, 0.78 } },
+        { id = "shout",   meters = 25, color = { 1.00, 0.60, 0.20 } },
     },
 
     -- Meters -> Nanos World units multiplier (1 unit = 1 cm).
     -- If the range is 100 times too big or too small, set it to 1.
     unitsPerMeter = 100,
+
+    -- Ground circle shown when you change mode (only you see it)
+    circle = {
+        enabled = true,
+        duration = 2.5,      -- seconds the circle stays visible after a quick tap
+        expandTime = 0.35,   -- seconds for the circle to grow from your feet to its full size
+        holdToKeep = true,   -- true = the circle stays visible as long as you hold the key
+        releaseDelay = 0.4,  -- seconds the circle stays after you release a held key
+        maxHold = 10,        -- safety: maximum seconds a held key keeps the circle
+        thickness = 3,       -- line thickness
+        groundOffset = 90,   -- distance between the character center and the ground (units)
+        segments = 64,       -- smoothness of the circle
+    },
 
     -- HUD appearance (pixels / CSS colors)
     hud = {

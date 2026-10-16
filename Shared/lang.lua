@@ -21,6 +21,8 @@ CFG.Lang = {
         ["p_meters_num"]  = "modes[%s].meters doit être un nombre > 0",
         ["p_meters_order"]= "modes[%s].meters doit être plus grand que le mode précédent",
         ["p_mode_id"]     = "modes[%s].id doit être un texte non vide",
+        ["p_color"]       = "modes[%s].color doit être { r, g, b } avec des valeurs entre 0 et 1",
+        ["p_circle"]      = "circle : duration > 0, expandTime >= 0, releaseDelay >= 0, maxHold > 0 et segments >= 8",
 
         -- server
         ["config_problem"] = "CONFIG : %s",
@@ -61,7 +63,14 @@ CFG.Lang = {
         ["mic_speaking"]   = "micro : parle",
         ["mic_silent"]     = "micro : silence",
         ["key_pressed"]    = "touche %s appuyée, demande envoyée au serveur",
+        ["key_released"]   = "touche %s relâchée",
         ["client_ready"]   = "client prêt, touche = %s, langue = %s",
+        ["circle_show"]    = "cercle affiché : mode %s, rayon %s m",
+        ["circle_hold"]    = "touche maintenue : le cercle reste affiché",
+        ["circle_release"] = "touche relâchée : le cercle disparaît dans %s s",
+        ["circle_hold_max"]= "durée maximale de maintien atteinte, cercle retiré",
+        ["circle_fail"]    = "dessin du cercle impossible (Debug.DrawLine) : %s",
+        ["circle_no_char"] = "pas de personnage contrôlé, cercle ignoré",
     },
 
     en = {
@@ -80,6 +89,8 @@ CFG.Lang = {
         ["p_meters_num"]  = "modes[%s].meters must be a number > 0",
         ["p_meters_order"]= "modes[%s].meters must be greater than the previous mode",
         ["p_mode_id"]     = "modes[%s].id must be a non-empty text",
+        ["p_color"]       = "modes[%s].color must be { r, g, b } with values between 0 and 1",
+        ["p_circle"]      = "circle: duration > 0, expandTime >= 0, releaseDelay >= 0, maxHold > 0 and segments >= 8",
 
         -- server
         ["config_problem"] = "CONFIG: %s",
@@ -120,7 +131,14 @@ CFG.Lang = {
         ["mic_speaking"]   = "microphone: speaking",
         ["mic_silent"]     = "microphone: silent",
         ["key_pressed"]    = "key %s pressed, request sent to server",
+        ["key_released"]   = "key %s released",
         ["client_ready"]   = "client ready, key = %s, language = %s",
+        ["circle_show"]    = "circle shown: mode %s, radius %s m",
+        ["circle_hold"]    = "key held: the circle stays visible",
+        ["circle_release"] = "key released: the circle disappears in %s s",
+        ["circle_hold_max"]= "maximum hold time reached, circle removed",
+        ["circle_fail"]    = "could not draw the circle (Debug.DrawLine): %s",
+        ["circle_no_char"] = "no controlled character, circle skipped",
     },
 }
 

@@ -8,14 +8,14 @@ local SIDE = "SERVER"
 
 local function requireDebug()
     if not CFG.debug then
-        Console.Warn("[voice-proximity] " .. T("need_debug"))
+        Console.Warn(T("need_debug"))
         return false
     end
     return true
 end
 
 local function out(text)
-    Console.Log("[voice-proximity] " .. text)
+    Console.Log(text)
 end
 
 -- voice_debug : prints the config and each connected player's state
